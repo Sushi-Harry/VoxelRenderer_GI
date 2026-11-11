@@ -11,8 +11,8 @@ int main(){
         renderer.init();
         renderer.setClearColor({0.0F, 0.2F, 0.3F, 1.0F});
 
-        // Camera3D camera(glm::vec3(0.0F, 15.0F, 30.0F));
         Camera3D camera(glm::vec3(0.0F, 80.0F, 80.0F), glm::vec3(0.0F, 1.0F, 0.0F), -90.0F, -35.0F);
+        camera.setMovementSpeed(10.0F);
         bool firstMouse = true;
         float lastX = window.getWidth() / 2.0F, lastY = window.getHeight() / 2.0F;
         window.onMouseMove = [&](float xpos, float ypos){
@@ -51,7 +51,10 @@ int main(){
                 camera.processKeyboard(camera_movement::RIGHT, dt);
             if (glfwGetKey(nativeWin, GLFW_KEY_ESCAPE) == GLFW_PRESS)
                 glfwSetWindowShouldClose(nativeWin, true);
+            if(glfwGetKey(nativeWin, GLFW_KEY_UP) == GLFW_PRESS)
+                camera.setMovementSpeed(camera.getMovementSpeed() + 0.1F);
 
+            world.upadteChunkStreaming(camera.getViewPos(), 4);
             world.update();
             renderer.clear();
 

@@ -42,9 +42,12 @@ public:
 
     void update();
     void render(const Renderer& renderer, const Shader& shader) const;
+    void upadteChunkStreaming(const glm::vec3& cameraPos, int renderDistance);
 
 private:
     std::unordered_map<glm::ivec3, std::unique_ptr<ChunkNode>> _chunks;
+
+    glm::ivec3 _lastCamChunk = glm::ivec3(-999, -999, -999);
 };
 
 #endif

@@ -170,3 +170,61 @@ void ChunkManager::setVoxel_world(int wx, int wy, int wz, VoxelID id){
         }
     }
 }
+
+void ChunkManager::upadteChunkStreaming(const glm::vec3& cameraPos, int renderDistance){
+    glm::ivec3 currentCamChunk = worldToChunkPos(
+        static_cast<int>(std::floor(cameraPos.x)),
+        0,
+        static_cast<int>(std::floor(cameraPos.z))
+    );
+
+    if(currentCamChunk == _lastCamChunk){
+        return;
+    }
+
+    _lastCamChunk = currentCamChunk;
+
+    int camX = currentCamChunk.x;
+    int camZ = currentCamChunk.z;
+
+    int unloadDistance = renderDistance + 1;
+    for(auto it = _chunks.begin(); it != _chunks.end();){
+        glm::ivec3 pos = it->first;
+
+        if(std::abs(pos.x - camX) > unloadDistance || std::abs(pos.z - camZ) > unloadDistance){
+            it = _chunks.erase(it);
+        }else{
+            it++;
+        }
+    }
+
+    for(int x = -renderDistance; x <= renderDistance; x++){
+        for(int z = -renderDistance; z <= renderDistance; z++){
+            glm::ivec3 targetPos(camX + x, 0, camZ + z);
+            if(_chunks.find(targetPos) == _chunks.end()){
+                loadChunk(targetPos.x, targetPos.y, targetPos.z);
+
+                Chunk& chunk = _chunks[targetPos]->_chunk;
+                for(int lz = 0; lz <= CHUNK_SIZE; lz++){
+                    for(int lx = 0; lx <= CHUNK_SIZE; lx++){
+                        int worldX = targetPos.x * CHUNK_SIZE + lx;
+                        int worldZ = targetPos.z * CHUNK_SIZE + lz;
+                        int height = getTerrainHeight(worldX, worldZ);
+
+                        for(int ly = 0; ly < CHUNK_SIZE; ly++){
+                            if(ly > height){
+                                chunk.setVoxel(lx, ly, lz, 0);
+                            }else if(ly == height){
+                                chunk.setVoxel(lx, ly, lz, 1);
+                            }else if(ly >= height - 3){
+                                chunk.setVoxel(lx, ly, lz, 2);
+                            }else{
+                                chunk.setVoxel(lx, ly, lz, 3);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

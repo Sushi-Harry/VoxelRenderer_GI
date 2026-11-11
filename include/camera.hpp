@@ -60,6 +60,15 @@ public:
         return _position;
     }
 
+    float getMovementSpeed() const { return _mv_speed; }
+
+    void setMovementSpeed(float speed) {
+        if(speed <= 0.0F){
+            speed = SPEED;
+        }
+        _mv_speed = speed;
+    }
+
     void processMouseMovement(float x_offset, float y_offset){
         x_offset *= _mouse_sensitivity;
         y_offset *= _mouse_sensitivity;
