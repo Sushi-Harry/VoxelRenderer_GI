@@ -2,7 +2,7 @@
 
 in vec3 FragPos;
 in vec3 Normal;
-flat in uint MatrialID;
+flat in uint MaterialID;
 
 out vec4 FragColor;
 
@@ -23,7 +23,7 @@ void main(){
     // basic dir light setup here
     vec3 lightDir = normalize(vec3(0.4, 0.8, 0.5));
     float diff = max(dot(N, lightDir), 0.2);
-    vec3 baseColor = getMaterialColor(MatrialID);
+    vec3 baseColor = getMaterialColor(MaterialID);
     FragColor = vec4(baseColor * diff, 1.0);
 }
 

@@ -13,7 +13,7 @@ using VoxelID = uint8_t; // Saving space for each chunk by using an 8 bit intege
 class Chunk{
 public:
     Chunk(glm::ivec3& chunk_pos) : _chunkPosition(chunk_pos) { _voxels.fill(0); }
-    ~Chunk();
+    ~Chunk() = default;
 
     static inline constexpr int getIndex(int x, int y, int z) { return x + (y * CHUNK_SIZE) + (z * CHUNK_SIZE * CHUNK_SIZE); }
     VoxelID getVoxel(int x, int y, int z) const {
@@ -32,6 +32,7 @@ public:
 
     bool isDirty() const { return _isDirty; }
     void setClean() { _isDirty = false; }
+    void setDirty() { _isDirty = true; }
     glm::ivec3 getPosition() const { return _chunkPosition; }
     const std::array<VoxelID, CHUNK_VOL>& getVoxelData() const { return _voxels; }
 

@@ -2,7 +2,7 @@
 
 void Renderer::init(){
     enableDepthTest(true);
-    enableCullFace(true);
+    enableCullFace(false);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 }
