@@ -3,6 +3,7 @@
 #include <iostream>
 #include "camera.hpp"
 #include <chunk_manager.hpp>
+#include <vxgi_system.hpp>
 
 int main(){
     try{
@@ -10,6 +11,8 @@ int main(){
         Renderer renderer;
         renderer.init();
         renderer.setClearColor({0.0F, 0.2F, 0.3F, 1.0F});
+
+        GISystem giSystem;
 
         Camera3D camera(glm::vec3(0.0F, 80.0F, 80.0F), glm::vec3(0.0F, 1.0F, 0.0F), -90.0F, -35.0F);
         camera.setMovementSpeed(10.0F);
@@ -56,11 +59,13 @@ int main(){
 
             world.upadteChunkStreaming(camera.getViewPos(), 4);
             world.update();
-            renderer.clear();
+            // renderer.clear();
 
-            shader.use();
-            shader.setMat4("u_ViewProjection", camera.getViewProjMatrix());
-            world.render(renderer, shader);
+            // shader.use();
+            // shader.setMat4("u_ViewProjection", camera.getViewProjMatrix());
+            // world.render(renderer, shader);
+
+            giSystem.Execute(renderer, world, camera);
 
             window.swapBuffers();
         }
